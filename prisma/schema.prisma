@@ -1,0 +1,43 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgres"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        String   @id @default(cuid())
+    username  String   @unique
+    password  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    status   String   @default("offline")
+    lastSeen DateTime @default(now())
+    avatar   Bytes?
+
+    sentMessages     Message[] @relation("MessageFrom")
+    receivedMessages Message[] @relation("MessageTo")
+
+    @@index([id], name: "id")
+    @@index([username], name: "username")
+}
+
+model Message {
+    id        String   @id @default(cuid())
+    text      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    from   User   @relation(name: "MessageFrom", fields: [fromId], references: [id])
+    fromId String
+
+    to   User   @relation(name: "MessageTo", fields: [toId], references: [id])
+    toId String
+
+    @@index([fromId], name: "fromId")
+    @@index([toId], name: "toId")
+    @@index([fromId, toId], name: "fromId_toId")
+}

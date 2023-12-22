@@ -1,0 +1,53 @@
+{
+	"name": "zapzap",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"prebuild": "prisma generate && prisma migrate deploy",
+		"build:1-next": "next build",
+		"build:2-server": "tsc --project tsconfig.server.json",
+		"build": "next start",
+		"start:1-next": "next start",
+		"start:2-server": "node dist/server/wssDevServer.js",
+		"start": "run-p start:*",
+		"dev:next": "next dev -p 3000",
+		"dev:wss": "tsx watch src/server/wssDevServer.ts",
+		"dev": "cross-env run-p dev:*",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@prisma/client": "^5.7.1",
+		"@tanstack/react-query": "^4.36.1",
+		"@trpc/client": "^10.44.1",
+		"@trpc/next": "^10.44.1",
+		"@trpc/react-query": "^10.44.1",
+		"@trpc/server": "^10.44.1",
+		"cross-env": "^7.0.3",
+		"jsonwebtoken": "^9.0.2",
+		"lucide-react": "^0.299.0",
+		"next": "14.0.4",
+		"next-auth": "^4.22.1",
+		"react": "^18",
+		"react-dom": "^18",
+		"react-hook-form": "^7.49.2",
+		"superjson": "^2.2.1",
+		"ws": "^8.15.1",
+		"zod": "^3.22.4"
+	},
+	"devDependencies": {
+		"@types/jsonwebtoken": "^9.0.5",
+		"@types/node": "^20",
+		"@types/react": "^18",
+		"@types/react-dom": "^18",
+		"@types/ws": "^8.5.10",
+		"autoprefixer": "^10.0.1",
+		"eslint": "^8",
+		"eslint-config-next": "14.0.4",
+		"npm-run-all": "^4.1.5",
+		"postcss": "^8",
+		"prisma": "^5.7.1",
+		"tailwindcss": "^3.3.0",
+		"tsx": "^4.7.0",
+		"typescript": "^5"
+	}
+}

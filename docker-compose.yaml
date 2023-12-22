@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: neguin
+            POSTGRES_PASSWORD: abobora
+            POSTGRES_DB: zapzap
+        ports:
+            - '5932:5432'
+        volumes:
+            - my_db_volume:/var/lib/postgresql/data
+
+volumes:
+    my_db_volume:
