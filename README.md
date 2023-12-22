@@ -43,7 +43,7 @@ This project includes a pre-configured `docker-compose.yml` file to facilitate t
 
 - **Start the Database with Docker Compose:** In the root directory of the project, run the following command:
 ```bash
-   docker-compose up -d
+docker-compose up -d
 ```
 This command will start a PostgreSQL instance in a Docker container. Ensure Docker is installed and running on your system before executing this command.
 
