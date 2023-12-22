@@ -3,7 +3,7 @@ import { ComponentType, useEffect, useRef, useState } from 'react';
 export type IPopupMenuItems = {
 	name: string;
 	onClick?: () => void;
-	icon?: ComponentType<any>;
+	Icon?: ComponentType<any>;
 };
 
 type IPopupMenu = {
@@ -30,10 +30,10 @@ export function PopupMenu({ items, Icon, classBoxItems }: IPopupMenu) {
 		};
 	}, []);
 
-	function Item({ name, onClick, icon }: IPopupMenuItems) {
+	function Item({ name, onClick, Icon: IconItem }: IPopupMenuItems) {
 		return (
 			<>
-				{icon}
+				{IconItem}
 				<p
 					className="block px-3 py-1 text-white-800 hover:bg-gray-800 text-[12pt] cursor-pointer select-none rounded-sm"
 					onClick={() => {

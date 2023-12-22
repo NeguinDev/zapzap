@@ -90,7 +90,7 @@ export default function ChatPage() {
 	const itemsProfile: IPopupMenuItems[] = [
 		{
 			name: 'Sair',
-			icon: LogOut,
+			Icon: LogOut,
 			onClick: () => {
 				signOut({
 					redirect: false,
