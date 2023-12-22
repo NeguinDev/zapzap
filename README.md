@@ -67,4 +67,6 @@ npm run dev
 
 ## Screenshots
 
-![Screenshot 1]()
+![Screenshot 1](./screenshots/Screenshot%201.png)
+
+![Screenshot 1](./screenshots/Screenshot%202.png)
