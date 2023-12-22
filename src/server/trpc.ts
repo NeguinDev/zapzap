@@ -52,7 +52,7 @@ const isAuthed = middleware(async ({ next, ctx }) => {
 	const session = ctx.session?.user;
 
 	if (!session?.name) {
-		throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorizedaaaaaaaaaaaaaaaaaaaaaaaaaa' });
+		throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorized' });
 	}
 
 	const user = await prisma.user.findUnique({

@@ -38,6 +38,8 @@ export default function RegisterPage() {
 				}
 
 				router.push('/chat');
+				router.reload();
+				return;
 			}
 		} catch (error) {
 			console.log(error);

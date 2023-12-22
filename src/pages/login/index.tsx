@@ -27,7 +27,9 @@ export default function LoginPage() {
 			});
 			
 			if (response?.ok) {
-				return router.push('/chat');
+				router.push('/chat');
+				router.reload();
+				return;
 			} else {
 				return setError(response?.error || 'Erro desconhecido');
 			}
