@@ -7,9 +7,9 @@ import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { getSession, signIn } from 'next-auth/react';
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
+import Head from 'next/head';
 
 import LogoIcon from '@/public/zapzap-icon.png';
-import Head from 'next/head';
 
 const inter = Inter({ subsets: ['latin'] });
 

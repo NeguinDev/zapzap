@@ -2,22 +2,29 @@ import { MouseEventHandler } from 'react';
 import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { LogOut } from 'lucide-react';
 
 import LogoIcon from '@/public/zapzap-icon.png';
 import AvatarIcon from '@/public/avatar.png';
 import { IPopupMenuItems, PopupMenu } from './popUpMenu';
-import { LogOut } from 'lucide-react';
 
 export type IContact = {
 	username: string;
 	lastMessage?: string;
-	avatarUrl?: string;
+	avatar?: string | null;
 	active?: boolean;
 	status?: string;
 	onClick?: MouseEventHandler<HTMLDivElement>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export function Contact({ username, lastMessage, avatarUrl, active, onClick, ...props }: IContact) {
+export function Contact({
+	username,
+	lastMessage,
+	avatar: avatarUrl,
+	active,
+	onClick,
+	...props
+}: IContact) {
 	const classActive = active ? 'bg-[#303030]' : '';
 
 	return (
@@ -30,9 +37,11 @@ export function Contact({ username, lastMessage, avatarUrl, active, onClick, ...
 				<Image
 					src={avatarUrl || AvatarIcon}
 					alt="avatar"
-					width={40}
-					height={40}
-					className="w-auto h-auto"
+					width="0"
+					height="0"
+					sizes="100vw"
+					className="max-w-[43px] max-h-[43px] w-full h-auto rounded-full"
+					priority={true}
 				/>
 			</div>
 
@@ -70,22 +79,21 @@ function HeaderSidebar() {
 
 type IFooterSidebar = {
 	username: string;
-	avatar?: Buffer | null;
+	avatar?: string | null;
 	itemsMenu: IPopupMenuItems[];
 };
 
 function FooterSidebar({ username, avatar, itemsMenu }: IFooterSidebar) {
-	const avatarBase64 = avatar ? Buffer.from(avatar).toString('base64') : null;
-	const avatarUrl = avatarBase64 ? `data:image/png;base64,${avatarBase64}` : null;
-
 	const Profile = (props: React.PropsWithChildren) => (
 		<div {...props} className="flex flex-row items-center">
 			<Image
-				src={avatarUrl || AvatarIcon}
+				src={avatar || AvatarIcon}
 				alt="avatar"
-				width={40}
-				height={40}
-				className="w-auto h-auto"
+				width="0"
+				height="0"
+				sizes="100vw"
+				className="max-w-[43px] max-h-[43px] w-full h-auto rounded-full mx-2"
+				priority={true}
 			/>
 			<span className="font-bold ml-1">{username}</span>
 		</div>

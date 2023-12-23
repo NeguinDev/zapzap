@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
 import { MoreVertical, MoveLeft } from 'lucide-react';
 import { IPopupMenuItems, PopupMenu } from './popUpMenu';
+import AvatarIcon from '@/public/avatar.png';
 
 type IMessagesComponents = {
 	setShowContacts: Dispatch<SetStateAction<boolean>>;
@@ -11,7 +12,7 @@ type IMessagesComponents = {
 };
 
 type IHeader = {
-	avatarUrl?: string;
+	avatar?: string | null;
 	name?: string;
 	status?: string;
 	setShowContacts: IMessagesComponents['setShowContacts'];
@@ -25,7 +26,7 @@ type IMessage = {
 	received?: boolean;
 };
 
-export function HeaderChat({ avatarUrl, name, status, setShowContacts, itemsPopup }: IHeader) {
+export function HeaderChat({ avatar, name, status, setShowContacts, itemsPopup }: IHeader) {
 	return (
 		<div className="flex flex-row w-full h-14 items-center border-b border-solid border-slate-600 justify-between px-2">
 			<div className="flex flex-row items-center">
@@ -33,7 +34,15 @@ export function HeaderChat({ avatarUrl, name, status, setShowContacts, itemsPopu
 					className="font-bold text-xl mx-2 lg:hidden cursor-pointer select-none"
 					onClick={() => setShowContacts(true)}
 				/>
-				<Image src={avatarUrl || '/avatar.png'} alt="avatar" width={40} height={40} />
+				<Image
+					src={avatar || AvatarIcon}
+					alt="avatar"
+					width="0"
+					height="0"
+					sizes="100vw"
+					className="max-w-[43px] max-h-[43px] w-full h-auto rounded-full"
+					priority={true}
+				/>
 				<div className="flex flex-col ml-2">
 					<span className="font-bold text-lg">{name}</span>
 					<span className="text-gray-400 text-[12pt]">{status}</span>
@@ -41,7 +50,7 @@ export function HeaderChat({ avatarUrl, name, status, setShowContacts, itemsPopu
 			</div>
 
 			<div>
-				<PopupMenu items={itemsPopup} Icon={MoreVertical} classBoxItems='right-0 mt-3'/>
+				<PopupMenu items={itemsPopup} Icon={MoreVertical} classBoxItems="right-0 mt-3" />
 			</div>
 		</div>
 	);

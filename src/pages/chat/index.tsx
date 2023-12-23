@@ -3,16 +3,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { Inter } from 'next/font/google';
 import { getSession, signOut, useSession } from 'next-auth/react';
-import { Message as MessageDB, User } from '@prisma/client';
+import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
+import { LogOut } from 'lucide-react';
+import Head from 'next/head';
 
+import { Message as MessageDB } from '@prisma/client';
 import { Contact, Sidebar } from '@/components/chat/contacts';
 import { HeaderChat, Message, Messages, ChatContainer } from '@/components/chat/messages';
 import { Input } from '@/components/chat/input';
 import { trpc } from '@/utils/trpc';
-import Head from 'next/head';
 import { formatTime } from '@/helpers/formatTime';
-import { useRouter } from 'next/router';
-import { LogOut } from 'lucide-react';
 import { IPopupMenuItems } from '@/components/chat/popUpMenu';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -20,7 +21,7 @@ const inter = Inter({ subsets: ['latin'] });
 type ContactData = {
 	username: string;
 	id: string;
-	avatar?: Buffer | null;
+	avatar?: string | null;
 	lastMessage?: MessageDB | null;
 	status?: string;
 	lastSeen?: Date;
@@ -50,6 +51,7 @@ export default function ChatPage() {
 	const { mutateAsync: sendMessage } = trpc.message.send.useMutation();
 	const { mutateAsync: clearChat } = trpc.message.clearChat.useMutation();
 	const { mutateAsync: updateStatus } = trpc.message.updateStatus.useMutation();
+	const { mutateAsync: updateAvatar } = trpc.message.updateAvatar.useMutation();
 
 	const itemsPopup: IPopupMenuItems[] = [
 		{
@@ -89,6 +91,57 @@ export default function ChatPage() {
 
 	const itemsProfile: IPopupMenuItems[] = [
 		{
+			name: 'Alterar Foto de Perfil',
+			onClick: async () => {
+				const { value: file } = await Swal.fire({
+					title: 'Selecione uma imagem para o perfil',
+					background: '#313131',
+					color: '#fff',
+					confirmButtonText: 'Confirmar',
+					confirmButtonColor: 'rgb(21, 128, 61)',
+					input: 'file',
+					inputAttributes: {
+						accept: 'image/*',
+						'aria-label': 'Selecione uma imagem',
+					},
+				});
+
+				if (file) {
+					const reader = new FileReader();
+
+					reader.onload = async (e) => {
+						const imageUrl = e.target?.result;
+						if (typeof imageUrl !== 'string') {
+							Swal.fire({
+								title: 'Erro ao carregar a imagem',
+								icon: 'error',
+							});
+
+							return;
+						}
+
+						await updateAvatar({ avatar: imageUrl });
+
+						Swal.fire({
+							title: 'Sua foto de perfil foi alterada com sucesso!',
+							imageUrl,
+							imageHeight: 200,
+							imageWidth: 200,
+							background: '#313131',
+							confirmButtonColor: 'rgb(21, 128, 61)',
+							color: '#fff',
+							customClass: {
+								image: 'rounded-full',
+							},
+							imageAlt: 'Foto de perfil',
+						});
+					};
+
+					reader.readAsDataURL(file);
+				}
+			},
+		},
+		{
 			name: 'Sair',
 			Icon: LogOut,
 			onClick: () => {
@@ -97,12 +150,6 @@ export default function ChatPage() {
 				});
 
 				router.push('/login');
-			},
-		},
-		{
-			name: 'Alterar Foto de Perfil',
-			onClick: () => {
-				console.log('alterar foto de perfil');
 			},
 		},
 	];
@@ -289,7 +336,7 @@ export default function ChatPage() {
 				{ctxMenu.visible && ContextMenu}
 
 				{users.map((user) => {
-					const { id, username, lastMessage } = user;
+					const { id, username, lastMessage, avatar } = user;
 					let lastMessageText = lastMessage?.text;
 
 					if (lastMessageText && lastMessage?.fromId !== id) {
@@ -302,6 +349,7 @@ export default function ChatPage() {
 							username={username}
 							active={id === contactSelected?.id}
 							lastMessage={lastMessageText}
+							avatar={avatar}
 							onClick={() => handleContactClick(user)}
 							onContextMenu={(event) => handleContextMenu(event, user)}
 						/>
@@ -316,6 +364,7 @@ export default function ChatPage() {
 						status={formatStatusUser(contactSelected)}
 						setShowContacts={setShowContacts}
 						itemsPopup={itemsPopup}
+						avatar={contactSelected?.avatar}
 					/>
 
 					<Messages>

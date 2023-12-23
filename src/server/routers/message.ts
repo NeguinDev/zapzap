@@ -2,7 +2,7 @@ import { observable } from '@trpc/server/observable';
 import { EventEmitter } from 'events';
 import { prisma } from '../prisma';
 import { z } from 'zod';
-import { authedProcedure, publicProcedure, router } from '../trpc';
+import { authedProcedure, router } from '../trpc';
 import { Message } from '@prisma/client';
 
 type UserStatus = {
@@ -70,7 +70,13 @@ export const messageRouter = router({
 			},
 		});
 
-		return user;
+		const base64 = user.avatar?.toString('base64');
+		const avatar = base64 ? `data:image/png;base64,${base64}` : null;
+
+		return {
+			...user,
+			avatar,
+		};
 	}),
 
 	users: authedProcedure.mutation(async ({ ctx }) => {
@@ -80,6 +86,7 @@ export const messageRouter = router({
 				username: true,
 				status: true,
 				lastSeen: true,
+				avatar: true,
 			},
 			where: {
 				id: {
@@ -88,8 +95,11 @@ export const messageRouter = router({
 			},
 		});
 
-		const usersWithLastMessage = await Promise.all(
+		const usersWithLastMessageAndAvatarBase64 = await Promise.all(
 			users.map(async (user) => {
+				const base64 = user.avatar?.toString('base64');
+				const avatar = base64 ? `data:image/png;base64,${base64}` : null;
+
 				const lastMessage = await getLastMessage({
 					fromId: user.id,
 					toId: ctx.user.id!,
@@ -97,12 +107,13 @@ export const messageRouter = router({
 
 				return {
 					...user,
+					avatar,
 					lastMessage,
 				};
 			})
 		);
 
-		return usersWithLastMessage;
+		return usersWithLastMessageAndAvatarBase64;
 	}),
 
 	getLastMessage: authedProcedure
@@ -263,5 +274,37 @@ export const messageRouter = router({
 			});
 
 			return messages;
+		}),
+
+	updateAvatar: authedProcedure
+		.input(
+			z.object({
+				avatar: z.string(),
+			})
+		)
+		.mutation(async ({ input, ctx }) => {
+			const base64 = input.avatar.split(',')[1];
+			const avatar = Buffer.from(base64, 'base64');
+
+			const user = await prisma.user.update({
+				where: {
+					id: ctx.user.id!,
+				},
+				data: {
+					avatar,
+				},
+				select: {
+					id: true,
+					username: true,
+					status: true,
+					lastSeen: true,
+					avatar: true,
+				},
+			});
+
+			return {
+				...user,
+				avatar: input.avatar,
+			};
 		}),
 });
