@@ -40,7 +40,7 @@ export function HeaderChat({ avatar, name, status, setShowContacts, itemsPopup }
 					width="0"
 					height="0"
 					sizes="100vw"
-					className="max-w-[43px] max-h-[43px] w-full h-auto rounded-full"
+					className="max-w-[40px] max-h-[40px] w-full h-auto rounded-full"
 					priority={true}
 				/>
 				<div className="flex flex-col ml-2">
@@ -60,6 +60,20 @@ export function Message({ text, time, received, id }: IMessage) {
 	const align = received ? 'start' : 'end';
 	const color = received ? 'bg-slate-800' : 'bg-[#00301c]';
 
+	function formatText(text: string) {
+		const lines = text.split('\n');
+		if (lines.length === 1) return text;
+
+		const textWithBreakLine = lines.map((line, index) => (
+			<span key={index}>
+				{line}
+				<br />
+			</span>
+		));
+
+		return textWithBreakLine;
+	}
+
 	return (
 		<div
 			id={id}
@@ -69,7 +83,7 @@ export function Message({ text, time, received, id }: IMessage) {
 			}}
 			className={`flex flex-col ${color} max-w-[30rem] max-lg:max-w-[20rem] min-w-[6rem] w-fit rounded-xl px-3 py-1 break-all break-after-all break-before-all m-2`}
 		>
-			<span className="text-[12pt]">{text}</span>
+			<span className="text-[12pt]">{formatText(text)}</span>
 			<span
 				className={`text-[9pt] text-gray-400`}
 				style={{
@@ -88,7 +102,7 @@ export function Messages({ children }: { children?: React.ReactNode }) {
 		<div
 			className="flex flex-col overflow-y-auto"
 			style={{
-				height: 'calc(99vh - 6.5rem)',
+				maxHeight: 'calc(99vh - 6.5rem)',
 			}}
 		>
 			{children}

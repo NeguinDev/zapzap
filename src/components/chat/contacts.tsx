@@ -40,7 +40,7 @@ export function Contact({
 					width="0"
 					height="0"
 					sizes="100vw"
-					className="max-w-[43px] max-h-[43px] w-full h-auto rounded-full"
+					className="max-w-[40px] max-h-[40px] w-full h-auto rounded-full"
 					priority={true}
 				/>
 			</div>
@@ -92,7 +92,7 @@ function FooterSidebar({ username, avatar, itemsMenu }: IFooterSidebar) {
 				width="0"
 				height="0"
 				sizes="100vw"
-				className="max-w-[43px] max-h-[43px] w-full h-auto rounded-full mx-2"
+				className="max-w-[40px] max-h-[40px] w-full h-auto rounded-full mx-2"
 				priority={true}
 			/>
 			<span className="font-bold ml-1">{username}</span>
