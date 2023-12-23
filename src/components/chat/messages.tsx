@@ -102,7 +102,7 @@ export function Messages({ children }: { children?: React.ReactNode }) {
 		<div
 			className="flex flex-col overflow-y-auto"
 			style={{
-				maxHeight: 'calc(99vh - 6.5rem)',
+				height: 'calc(99vh - 6.5rem)',
 			}}
 		>
 			{children}
