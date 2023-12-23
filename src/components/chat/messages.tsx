@@ -39,8 +39,8 @@ export function HeaderChat({ avatar, name, status, setShowContacts, itemsPopup }
 					alt="avatar"
 					width="0"
 					height="0"
-					sizes="100vw"
-					className="max-w-[40px] max-h-[40px] w-full h-auto rounded-full"
+					// sizes="100vw"
+					className="w-12 h-12 rounded-full object-cover overflow-hidden"
 					priority={true}
 				/>
 				<div className="flex flex-col ml-2">
